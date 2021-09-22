@@ -1,46 +1,30 @@
 ﻿// using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 // using System.Linq;
 // using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NewCore.Data.Models;
+using NewCore.Services.PolicyServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NewCore.API.Controllers
 {
     [Route("api/[controller]")]
-    public class PolicyController : Controller
+    public class PolicyController : ControllerBase
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private IPolicyServices policyServices;
+
+        public PolicyController(IPolicyServices _policyServices)
         {
-            return new string[] { "value1", "value2" };
+            this.policyServices = _policyServices;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("GetPolicies")]
+        public async Task<IEnumerable<Policy>> GetPolicies()
         {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return await policyServices.GetPoliciesAsync();
         }
     }
 }

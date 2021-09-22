@@ -14,7 +14,10 @@ using Microsoft.Extensions.Logging;
 using NewCore.Data;
 using NewCore.Data.Context;
 using NewCore.Services;
-using NewCore.Services.ServiceInterfaces;
+// using NewCore.Services;
+using NewCore.Services.CustomerServices;
+using NewCore.Services.Interfaces;
+using NewCore.Services.PolicyServices;
 
 namespace NewCore.API
 {
@@ -37,6 +40,26 @@ namespace NewCore.API
             ).AddJsonOptions(options =>
                options.JsonSerializerOptions.WriteIndented = true
             );
+            // Add Data Layer
+            //services.AddDbContext<NewCoreDataContext>(options =>
+            //{
+            //    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
+            //});
+            services
+                .AddEntityFrameworkSqlServer()
+                .AddDbContext<NewCoreDataContext>(options =>
+                    {
+                        options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
+                    })
+                .AddTransient<ICustomerServices, CustomerServices>()
+                .AddTransient<IPolicyServices, PolicyServices>();
+
+            // Add Business Layer
+            //services.AddTransient<ICustomerServices, CustomerServices>();
+            //services.AddTransient<IPolicyServices, PolicyServices>();
+
+            // Add HTTP Client
+            services.AddHttpClient();
 
             // Add CORS
             services.AddCors(options => {
@@ -54,14 +77,6 @@ namespace NewCore.API
                 //     builder => builder.WithOrigins("http://localhost:5001")                    
                 // );
 
-                // Add Data Layer
-                services.AddDbContext<NewCoreDataContext>(options =>
-                {
-                    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-                });
-
-                // Add Business Layer
-                services.AddTransient<IServiceInterfaces, NewCoreServices>();
             });
         }
 

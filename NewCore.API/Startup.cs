@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewCore.Data;
+using NewCore.Data.Context;
+using NewCore.Services;
+using NewCore.Services.ServiceInterfaces;
 
 namespace NewCore.API
 {
@@ -30,7 +33,7 @@ namespace NewCore.API
 
             // services.AddControllers();
             services.AddControllers(options =>
-               options.SuppressAsyncSuffixInActionNames = false
+               options.SuppressAsyncSuffixInActionNames = true
             ).AddJsonOptions(options =>
                options.JsonSerializerOptions.WriteIndented = true
             );
@@ -57,6 +60,8 @@ namespace NewCore.API
                     options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
                 });
 
+                // Add Business Layer
+                services.AddTransient<IServiceInterfaces, NewCoreServices>();
             });
         }
 

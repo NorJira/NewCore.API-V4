@@ -1,0 +1,32 @@
+﻿docker sql server 
+
+// docker pull mcr.microsoft.com/mssql/server 
+docker pull mcr.microsoft.com/mssql/server:2017-latest 
+ 
+docker images 
+
+docker create -v /var/opt/mssql --name mssql mcr.microsoft.com/mssql/server /bin/true
+
+docker run —rm —name=macsql -e ‘ACCEPT_EULA=Y’ -e ‘SA_PASSWORD=Pa$$w0rd’ -p 1433:1433 -v sqlvolume:/data/mssql -d mcr.microsoft.com/mssql/server macsql
+
+docker run --rm --name=macsql -e ‘ACCEPT_EULA=Y’ -e ‘SA_PASSWORD=Pa$$w0rd’ -p 1433:1433 -v sqlvolume:/var/opt/mssql -d mcr.microsoft.com/mssql/server macsql    
+
+docker run --rm --name=macsql -e ‘ACCEPT_EULA=Y’ -e ‘SA_PASSWORD=Pa$$w0rd’ -p 1433:1433 --volumes-from mssql  -d mcr.microsoft.com/mssql/server macsql    
+
+
+docker exec -it macsql /opt/mssql-tools/bin/sqlcmd  -S localhost -U sa -P Pa$$w0rd
+
+// this one work **********************
+docker pull mcr.microsoft.com/mssql/server 
+
+docker run --name sql1 -h sql1 -e ACCEPT_EULA=Y -e SA_PASSWORD=Pass#Word1 -u 0:0 -p 1433:1433 -d mcr.microsoft.com/mssql/server
+
+docker run --name sql1 -h sql1 -e ACCEPT_EULA=Y -e SA_PASSWORD=Pass#Word1 -u 0:0 -p 1433:1433 -v /Users/nor_mac/sqldata/:/var/opt/mssql -d mcr.microsoft.com/mssql/server 
+
+\\ ——————————
+
+dotnet tool update --global dotnet-ef  
+
+\\ ———————————
+
+dotnet ef dbcontext scaffold "Server=localhost,1433;Database=TestDB;User=sa;Password=Pass#Word1" Microsoft.EntityFrameworkCore.SqlServer -t Customers -t Policy  -o Models --context-dir Context -c NewCoreDataContext -f -d

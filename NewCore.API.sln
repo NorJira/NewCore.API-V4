@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewCore.Services", "..\NewC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewCore.Data", "..\NewCore.Data\NewCore.Data.csproj", "{2623D447-E703-4DAC-A256-444013FB0C9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewCore.Dtos", "..\NewCore.Dtos\NewCore.Dtos.csproj", "{32B4641C-825E-483C-B680-7E79A672BEAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2623D447-E703-4DAC-A256-444013FB0C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2623D447-E703-4DAC-A256-444013FB0C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2623D447-E703-4DAC-A256-444013FB0C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B4641C-825E-483C-B680-7E79A672BEAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B4641C-825E-483C-B680-7E79A672BEAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B4641C-825E-483C-B680-7E79A672BEAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B4641C-825E-483C-B680-7E79A672BEAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

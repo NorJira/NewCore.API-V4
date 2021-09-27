@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using NewCore.Data;
 using NewCore.Data.Context;
 using NewCore.Services;
+using NewCore.Services.BusClass.DtoConversions;
 // using NewCore.Services;
 using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
@@ -53,6 +54,8 @@ namespace NewCore.API
                     })
                 .AddTransient<ICustomerServices, CustomerServices>()
                 .AddTransient<IPolicyServices, PolicyServices>();
+
+            //services.AddSingleton<CusDtoConversion>();
 
             // Add Business Layer
             //services.AddTransient<ICustomerServices, CustomerServices>();

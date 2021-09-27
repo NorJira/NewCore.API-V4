@@ -8,6 +8,9 @@
     <ProjectReference Include="..\..\NewCore.Data\NewCore.Data.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\NewCore.Dtos\NewCore.Dtos.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
     <ProjectReference Include="..\..\NewCore.Services\NewCore.Services.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
@@ -18,6 +21,7 @@
     <None Remove="Microsoft.EntityFrameworkCore.Tools" />
     <None Remove="Newtonsoft.Json" />
     <None Remove="Controllers\" />
+    <None Remove="Command.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
@@ -30,5 +34,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Extenstions.cs" />
+    <Compile Remove="Dtos\CustomerDto.cs" />
+    <Compile Remove="Dtos\CustomerExtensions.cs" />
+    <Compile Remove="Dtos\PolicyExtensions.cs" />
+    <Compile Remove="Dtos\PolicyDto.cs" />
   </ItemGroup>
 </Project>

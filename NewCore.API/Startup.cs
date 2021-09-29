@@ -18,6 +18,7 @@ using NewCore.Services.BusClass.DtoConversions;
 // using NewCore.Services;
 using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
+using NewCore.Services.PolCvgServices;
 using NewCore.Services.PolicyServices;
 
 namespace NewCore.API
@@ -34,13 +35,6 @@ namespace NewCore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            // services.AddControllers();
-            services.AddControllers(options =>
-               options.SuppressAsyncSuffixInActionNames = true
-            ).AddJsonOptions(options =>
-               options.JsonSerializerOptions.WriteIndented = true
-            );
             // Add Data Layer
             //services.AddDbContext<NewCoreDataContext>(options =>
             //{
@@ -49,11 +43,12 @@ namespace NewCore.API
             services
                 .AddEntityFrameworkSqlServer()
                 .AddDbContext<NewCoreDataContext>(options =>
-                    {
-                        options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-                    })
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
+                })
                 .AddTransient<ICustomerServices, CustomerServices>()
-                .AddTransient<IPolicyServices, PolicyServices>();
+                .AddTransient<IPolicyServices, PolicyServices>()
+                .AddTransient<IPolCvgServices, PolCvgServices>();
 
             //services.AddSingleton<CusDtoConversion>();
 
@@ -61,6 +56,13 @@ namespace NewCore.API
             //services.AddTransient<ICustomerServices, CustomerServices>();
             //services.AddTransient<IPolicyServices, PolicyServices>();
 
+            // services.AddControllers();
+            services.AddControllers(options =>
+               options.SuppressAsyncSuffixInActionNames = true
+            ).AddJsonOptions(options =>
+               options.JsonSerializerOptions.WriteIndented = true
+            );
+            
             // Add HTTP Client
             services.AddHttpClient();
 
@@ -97,6 +99,11 @@ namespace NewCore.API
 
             // NOR - middleware CORS must be after userouting() and before useauthorization()
             app.UseCors();  // use default
+            //app.UseCors(x =>x
+            //    .AllowAnyOrigin()
+            //    .WithMethods("httppost")
+            //    .AllowAnyHeader()
+            //);
             //app.UseCors("mypolicy");  // use mypolicy
 
             app.UseAuthorization();

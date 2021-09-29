@@ -30,3 +30,26 @@ dotnet tool update --global dotnet-ef
 \\ ———————————
 
 dotnet ef dbcontext scaffold "Server=localhost,1433;Database=TestDB;User=sa;Password=Pass#Word1" Microsoft.EntityFrameworkCore.SqlServer -t Customers -t Policy  -o Models --context-dir Context -c NewCoreDataContext -f -d
+
+
+// dbcontext connectionstring
+must add microsoft.extensions.configuration.json
+
+    public static string GetConnectionString()
+        {
+            var builder = new ConfigurationBuilder()
+             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
+             .AddJsonFile("appsettings.json");
+
+            //var config = builder.Build();
+            IConfiguration Configuration = builder.Build();
+            //return Configuration["ConnectionStrings:DefaultConnection"];
+            return Configuration.GetConnectionString("TestDBConnection");
+        }
+
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                optionsBuilder.UseSqlServer("Server=localhost,1433;Database=TestDB;User=sa;Password=Pass#Word1");
+                optionsBuilder.UseSqlServer(GetConnectionString());
+//--------------------------------------------
+
+

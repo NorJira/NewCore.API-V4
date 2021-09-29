@@ -46,9 +46,10 @@ namespace NewCore.API
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
                 })
-                .AddTransient<ICustomerServices, CustomerServices>()
-                .AddTransient<IPolicyServices, PolicyServices>()
-                .AddTransient<IPolCvgServices, PolCvgServices>();
+                .AddScoped<ICustomerServices, CustomerServices>()
+                .AddScoped<IPolicyServices, PolicyServices>()
+                .AddScoped<IPolCvgServices, PolCvgServices>();
+            //.AddTransient<>; 
 
             //services.AddSingleton<CusDtoConversion>();
 
@@ -83,6 +84,10 @@ namespace NewCore.API
                 // );
 
             });
+
+            // Add health check
+            //services.AddHealthChecks();
+                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

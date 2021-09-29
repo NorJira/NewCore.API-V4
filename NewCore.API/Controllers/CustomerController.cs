@@ -19,13 +19,13 @@ namespace NewCore.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerServices customerServices;
-        private readonly ILogger<CustomerController> logger;
+        //private readonly ILogger<CustomerController> logger;
 
-        public CustomerController(ICustomerServices _customerServices, ILogger<CustomerController> _logger)
+        public CustomerController(ICustomerServices _customerServices)
         //public CustomerController()
         {
             this.customerServices = _customerServices;
-            this.logger = _logger;
+            //this.logger = _logger;
         }
 
         [HttpPost("GetCustomers")]

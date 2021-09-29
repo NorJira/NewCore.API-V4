@@ -13,12 +13,12 @@ namespace NewCore.API.Controllers
     public class PolCvgController : ControllerBase
     {
         private IPolCvgServices polcvgServices;
-        private ILogger logger;
+        //private ILogger<PolCvgController> logger;
 
-        public PolCvgController(IPolCvgServices _polcvgServices, ILogger _logger)
+        public PolCvgController(IPolCvgServices _polcvgServices)
         {
             this.polcvgServices = _polcvgServices;
-            this.logger = _logger;
+            //this.logger = _logger;
         }
 
         [HttpPost("GetPolCvgByPolId")]

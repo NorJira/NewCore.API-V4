@@ -20,12 +20,13 @@ namespace NewCore.API.Controllers
     public class PolicyController : ControllerBase
     {
         private IPolicyServices policyServices;
-        private ILogger<PolicyController> logger;
+        //private ILogger<PolicyController> logger;
 
-        public PolicyController(IPolicyServices _policyServices, ILogger<PolicyController> _logger)
+        //public PolicyController(IPolicyServices _policyServices, ILogger<PolicyController> _logger)
+        public PolicyController(IPolicyServices _policyServices)
         {
             this.policyServices = _policyServices;
-            this.logger = _logger;
+            //this.logger = _logger;
         }
 
         [HttpPost("GetPolicies")]
@@ -33,7 +34,7 @@ namespace NewCore.API.Controllers
         {
             var results = await policyServices.GetPoliciesAsync();
 
-            logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {results.Count()} items");
+            //logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {results.Count()} items");
 
             return results;
         }

@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using JWTClassLib;
+using JWTClassLib.Helpers;
+using JWTClassLib.Middleware;
+using JWTClassLib.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NewCore.Data;
 using NewCore.Data.Context;
-using NewCore.Services;
-using NewCore.Services.BusClass.DtoConversions;
-// using NewCore.Services;
 using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
 using NewCore.Services.PolCvgServices;
@@ -40,15 +34,27 @@ namespace NewCore.API
             //{
             //    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
             //});
-            services
-                .AddEntityFrameworkSqlServer()
-                .AddDbContext<NewCoreDataContext>(options =>
+            services.AddEntityFrameworkSqlServer();
+
+            // configure strongly typed settings object
+            services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
+
+            // Add dbcontext
+            services.AddDbContext<NewCoreDataContext>(options =>
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-                })
-                .AddScoped<ICustomerServices, CustomerServices>()
+                });
+            services.AddDbContext<JWTDataContext>();
+
+            // Dependency Injection - Services
+            services.AddScoped<ICustomerServices, CustomerServices>()
                 .AddScoped<IPolicyServices, PolicyServices>()
                 .AddScoped<IPolCvgServices, PolCvgServices>();
+
+            // configure DI for JWT application & email //services
+            services.AddScoped<IAccountService, AccountService>()
+                .AddScoped<IEmailService, EmailService>();
+
             //.AddTransient<>; 
 
             //services.AddSingleton<CusDtoConversion>();
@@ -63,7 +69,10 @@ namespace NewCore.API
             ).AddJsonOptions(options =>
                options.JsonSerializerOptions.WriteIndented = true
             );
-            
+
+            // Add AutoMapper for JWT
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             // Add HTTP Client
             services.AddHttpClient();
 
@@ -103,7 +112,13 @@ namespace NewCore.API
             app.UseRouting();
 
             // NOR - middleware CORS must be after userouting() and before useauthorization()
-            app.UseCors();  // use default
+            //app.UseCors();  // use default
+            app.UseCors(x => x
+                .SetIsOriginAllowed(origin => true)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+
             //app.UseCors(x =>x
             //    .AllowAnyOrigin()
             //    .WithMethods("httppost")
@@ -111,7 +126,13 @@ namespace NewCore.API
             //);
             //app.UseCors("mypolicy");  // use mypolicy
 
-            app.UseAuthorization();
+            // global error handler
+            //app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
+
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

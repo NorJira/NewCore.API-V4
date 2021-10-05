@@ -4,11 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NewCore.Dtos;
-using NewCore.Data.Models;
-using NewCore.Services;
-using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

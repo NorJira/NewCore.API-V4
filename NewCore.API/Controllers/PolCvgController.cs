@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NewCore.Dtos;
 using NewCore.Services.PolCvgServices;
-//using NewCore.Services.PolCvgServices;
 
 namespace NewCore.API.Controllers
 {

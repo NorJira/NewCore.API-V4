@@ -14,6 +14,9 @@
     <ProjectReference Include="..\..\NewCore.Services\NewCore.Services.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\JWTClassLib\JWTClassLib.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Microsoft.EntityFrameworkCore" />
@@ -24,6 +27,9 @@
     <None Remove="Command.txt" />
     <None Remove="AspNetCore.HealthChecks.UI.Client" />
     <None Remove="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+    <None Remove="System.IdentityModel.Tokens.Jwt" />
+    <None Remove="Microsoft.AspNetCore.Authorization" />
+    <None Remove="AutoMapper" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
@@ -35,6 +41,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.10" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />

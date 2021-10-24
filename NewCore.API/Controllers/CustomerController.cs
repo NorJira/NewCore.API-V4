@@ -24,6 +24,7 @@ namespace NewCore.API.Controllers
             //this.logger = _logger;
         }
 
+        [Authorize]
         [HttpPost("GetCustomers")]
         public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
         {
@@ -41,6 +42,9 @@ namespace NewCore.API.Controllers
             //{
             //    return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
             //}
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 //var results = (await customerServices.GetCustomersAsync()).Select(cus => cus.AsDto());
@@ -62,13 +66,18 @@ namespace NewCore.API.Controllers
                 //var errResult = new ObjectResult(ex.Message);
                 //errResult.StatusCode = StatusCodes.Status500InternalServerError;
                 //return errResult;
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost("GetCustomer")]
         public async Task<ActionResult<CustomerDto>> GetCustomer([FromBody] CusIdDto req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var result = await customerServices.GetCustomerAsync(req.customerId);
@@ -88,13 +97,18 @@ namespace NewCore.API.Controllers
                 //var errResult = new ObjectResult(ex.Message);
                 //errResult.StatusCode = StatusCodes.Status500InternalServerError;
                 //return errResult;
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost("AddCustomer")]
         public async Task<ActionResult> AddCustomer([FromBody] CustomerDto cusDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var result = await customerServices.AddCustomerAsync(cusDto);
@@ -106,13 +120,18 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
             }
         }
 
+        [Authorize]
         [HttpPost("UpdateCustomer")]
         public async Task<ActionResult> UpdateCustomer([FromBody] CustomerDto cusDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 await customerServices.UpdateCustomerAsync(cusDto);
@@ -125,14 +144,18 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
-
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost("DeleteCustomer")]
         public async Task<ActionResult> DeleteCustomer([FromBody] CusIdDto cusIdDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 await customerServices.DeleteCustomerAsync(cusIdDto.customerId);
@@ -145,8 +168,8 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
-
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
     }

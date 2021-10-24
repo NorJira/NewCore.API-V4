@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace NewCore.API
 {
@@ -20,8 +14,11 @@ namespace NewCore.API
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    //webBuilder.UseStartup<Startup>();
                     //webBuilder.UseUrls("http://localhost:5000");
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseDefaultServiceProvider(options =>
+                        options.ValidateScopes = false);
                 });
     }
 }

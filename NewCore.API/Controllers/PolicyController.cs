@@ -23,19 +23,34 @@ namespace NewCore.API.Controllers
             //this.logger = _logger;
         }
 
+        [Authorize]
         [HttpPost("GetPolicies")]
-        public async Task<IEnumerable<PolicyDto>> GetPolicies()
+        public async Task<ActionResult<IEnumerable<PolicyDto>>> GetPolicies()
         {
-            var results = await policyServices.GetPoliciesAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
+            try
+            {
+                var results = await policyServices.GetPoliciesAsync();
 
-            //logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {results.Count()} items");
+                //logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {results.Count()} items");
 
-            return results;
+                return Ok(results); //  OK(results);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
+        [Authorize]
         [HttpPost("GetPolicy")]
         public async Task<ActionResult<PolicyDto>> GetPolicy([FromBody] PolIdDto req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var result = await policyServices.GetPolicyAsync(req.polId);
@@ -46,17 +61,22 @@ namespace NewCore.API.Controllers
 
                 // logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved PolicyOD {cusId}");
 
-                return new OkObjectResult(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost("AddPolicy")]
         public async Task<ActionResult> AddPolicy([FromBody] PolicyDto polDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var result = await policyServices.AddPolicyAsync(polDto);
@@ -68,13 +88,18 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
             }
         }
 
+        [Authorize]
         [HttpPost("UpdatePolicy")]
         public async Task<ActionResult> UpdatePolicy([FromBody] PolicyDto polDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 await policyServices.UpdatePolicyAsync(polDto);
@@ -83,14 +108,18 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
-
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost("DeletePolicy")]
         public async Task<ActionResult> DeletePolicy([FromBody] PolIdDto polIdDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 await policyServices.DeletePolicyAsync(polIdDto.polId);
@@ -99,7 +128,8 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
 
             }
         }

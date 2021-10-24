@@ -1,14 +1,20 @@
 ﻿using System;
-using JWTClassLib;
-using JWTClassLib.Helpers;
-using JWTClassLib.Middleware;
-using JWTClassLib.Services;
+using System.Text;
+using JWTIdentityClassLib.Data;
+using JWTIdentityClassLib.Entities;
+//using JWTClassLib.Helpers;
+using JWTIdentityClassLib.Middleware;
+using JWTIdentityClassLib.Services;
+using JWTIdentityClassLib.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using NewCore.Data.Context;
 using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
@@ -29,39 +35,61 @@ namespace NewCore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Data Layer
-            //services.AddDbContext<NewCoreDataContext>(options =>
-            //{
-            //    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-            //});
-            services.AddEntityFrameworkSqlServer();
-
             // configure strongly typed settings object
+            services.Configure<MailServiceSettings>(Configuration.GetSection("MailServiceSettings"));
             services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
 
-            // Add dbcontext
+            // Add Identity
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 6;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Add SQL Server services
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityDatabase"));
+            });
+            // Add NewCore dbcontext
             services.AddDbContext<NewCoreDataContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
+            });
+
+
+            // Add Authentication
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-                });
-            services.AddDbContext<JWTDataContext>();
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = Configuration["JWTSettings:Issuer"],
+                    ValidAudience = Configuration["JWTSettings:Audience"],
+                    RequireExpirationTime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTSettings:Key"])),
+                    ValidateIssuerSigningKey = true
+                };
+            });
+
+            // configure DI for Identity & JWT application & email //services
+            services.AddScoped<IUserService, UserService>()
+                .AddScoped<IEmailService, EmailService>();
 
             // Dependency Injection - Services
             services.AddScoped<ICustomerServices, CustomerServices>()
                 .AddScoped<IPolicyServices, PolicyServices>()
                 .AddScoped<IPolCvgServices, PolCvgServices>();
-
-            // configure DI for JWT application & email //services
-            services.AddScoped<IAccountService, AccountService>()
-                .AddScoped<IEmailService, EmailService>();
-
-            //.AddTransient<>; 
-
-            //services.AddSingleton<CusDtoConversion>();
-
-            // Add Business Layer
-            //services.AddTransient<ICustomerServices, CustomerServices>();
-            //services.AddTransient<IPolicyServices, PolicyServices>();
 
             // services.AddControllers();
             services.AddControllers(options =>
@@ -69,9 +97,6 @@ namespace NewCore.API
             ).AddJsonOptions(options =>
                options.JsonSerializerOptions.WriteIndented = true
             );
-
-            // Add AutoMapper for JWT
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Add HTTP Client
             services.AddHttpClient();
@@ -126,13 +151,12 @@ namespace NewCore.API
             //);
             //app.UseCors("mypolicy");  // use mypolicy
 
-            // global error handler
-            //app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseAuthorization();
 
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
-
-            //app.UseAuthorization();
+            // global error handler
+            //app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

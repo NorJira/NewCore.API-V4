@@ -19,9 +19,13 @@ namespace NewCore.API.Controllers
             //this.logger = _logger;
         }
 
+        [Authorize]
         [HttpPost("GetPolCvgByPolId")]
         public async Task<ActionResult<PolCvgDto>> GetPolCvgByPolId([FromBody] PolIdDto polId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var results = await polcvgServices.GetPolCvgByPolIdAsync(polId.polId);
@@ -32,13 +36,18 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
             }
         }
 
+        [Authorize]
         [HttpPost("AddPolCvgs")]
         public async Task<ActionResult<PolCvgDto>> AddPolCvgs([FromBody] PolCvgDto polCvgDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);  // ("Invalid input model!!!");
+            //
             try
             {
                 var results = await polcvgServices.AddPolCvgsAsyc(polCvgDto);
@@ -49,7 +58,8 @@ namespace NewCore.API.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
+                return BadRequest(ex);
+                //return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status500InternalServerError };
             }
 
             

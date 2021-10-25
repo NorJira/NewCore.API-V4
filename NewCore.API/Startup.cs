@@ -35,6 +35,20 @@ namespace NewCore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add SQL Server services
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityDatabase"));
+            });
+            // Add NewCore dbcontext
+            services.AddDbContext<NewCoreDataContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
+            });
+
+            // add auto mapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             // configure strongly typed settings object
             services.Configure<MailServiceSettings>(Configuration.GetSection("MailServiceSettings"));
             services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
@@ -50,18 +64,6 @@ namespace NewCore.API
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            // Add SQL Server services
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("IdentityDatabase"));
-            });
-            // Add NewCore dbcontext
-            services.AddDbContext<NewCoreDataContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("TestDBConnection"));
-            });
-
 
             // Add Authentication
             services.AddAuthentication(auth =>

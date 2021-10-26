@@ -13,6 +13,8 @@ namespace NewCore.API.Controllers
     {
         // returns the current authenticated account (null if not logged in)
         public ApplicationUser user => (ApplicationUser)HttpContext.Items["User"];
+        // get username for logger
+        public string logUserName => user == null ? "No Authen" : user.UserName;
     }
 }
 

@@ -20,6 +20,7 @@ using NewCore.Services.CustomerServices;
 using NewCore.Services.Interfaces;
 using NewCore.Services.PolCvgServices;
 using NewCore.Services.PolicyServices;
+using Newtonsoft;
 
 namespace NewCore.API
 {
@@ -98,7 +99,7 @@ namespace NewCore.API
                options.SuppressAsyncSuffixInActionNames = true
             ).AddJsonOptions(options =>
                options.JsonSerializerOptions.WriteIndented = true
-            );
+            ).AddNewtonsoftJson();
 
             // Add HTTP Client
             services.AddHttpClient();

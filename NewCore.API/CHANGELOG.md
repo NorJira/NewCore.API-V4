@@ -6,7 +6,10 @@ History of changes to newcore.api, newcore.dtos, newcore.services, newcore.data
 
 ## V4.01 (26/10/2021)
 
+- Add Nuget packages of Serilog, NewtonsoftJson, Microsoft.AspNetCore.Mvc.NewtonsoftJson
+- Config SeriLog in appsettings.json and program.cs
 - Add SeriLog to each controller/action to keep track of user activities
+- Update project dependencies references
 
 
 ## V4.00 (25/10/2021)

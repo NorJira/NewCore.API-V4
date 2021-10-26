@@ -8,6 +8,7 @@ using JWTIdentityClassLib.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,12 +20,16 @@ namespace NewCore.API.Controllers
     {
         private IUserService _userService;
         private readonly JWTSettings _jwtSettings;
+        private readonly ILogger<AuthController> _logger;
 
 
-        public AuthController(IUserService userService, IOptions<JWTSettings> jwtSettings)
+        public AuthController(IUserService userService,
+            IOptions<JWTSettings> jwtSettings,
+            ILogger<AuthController> logger)
         {
             this._userService = userService;
             this._jwtSettings = jwtSettings.Value;
+            this._logger = logger;
         }
 
         // api/auth/Register
@@ -38,8 +43,12 @@ namespace NewCore.API.Controllers
             {
                 var result = await _userService.RegisterUserAsync(model, Request.Headers["origin"]);
                 if (result.isSuccess)
+                {
+                    _logger.LogWarning($"Register new user {model.UserName}");
                     return Ok(result);
+                }
 
+                _logger.LogError(result.Message, result);
                 return BadRequest(result);
             }
             catch (Exception ex)
@@ -385,3 +394,12 @@ namespace NewCore.API.Controllers
 
     }
 }
+
+//<properties>
+//    <property key = 'SourceContext'>NewCore.API.Controllers.AuthController</property>
+//    <property key = 'ActionId'>2f715463-dd38-4531-94c8-083d57508c6a</property>
+//    <property key = 'ActionName' > NewCore.API.Controllers.AuthController.RegisterAsync(NewCore.API)</property>
+//    <property key ='RequestId'>0HMCOCKO6T4C0:00000002</property>
+//    <property key = 'RequestPath' >/ api / auth / register </ property >
+//    < property key='ConnectionId'>0HMCOCKO6T4C0</property>
+//</properties>
